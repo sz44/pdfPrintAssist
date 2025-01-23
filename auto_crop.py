@@ -32,8 +32,8 @@ def find_content_bbox(page):
     scale_y = page_rect.height / img_gray.shape[0]
     
     # Add padding (1mm = 2.83465 points)
-    # padding = 2.83465
-    padding = 0
+    padding = 2.83465
+    # padding = 0
     
     # Create bbox using page-relative coordinates
     bbox = pymupdf.Rect(
@@ -43,7 +43,6 @@ def find_content_bbox(page):
         min(page_rect.height, bottom * scale_y + padding)
     )
 
-    print(bbox)
     return bbox
 
 
@@ -52,48 +51,36 @@ def auto_crop_pdf(input_path, output_path):
     # Open the PDF
     doc = pymupdf.open(input_path)
 
-    for page_num in range(len(doc)):
-        page = doc[page_num]
+    page = doc[0]
 
-        # Find content bbox
-        bbox = find_content_bbox(page)
-        if bbox is None:
-            continue
+    # Find content bbox
+    bbox = find_content_bbox(page)
 
-        # Set the mediabox
-        # page.set_mediabox([0,0,100,100])
-        
-        print(page.mediabox_size)
-        print(page.mediabox)
-        # Set the cropbox
-        page.set_cropbox(bbox)
-        # Set other boxes to match cropbox
-        # page.set_trimbox(bbox)
-        # page.set_bleedbox(bbox)
-        # page.set_artbox(bbox)
+    # Set the mediabox
+    # page.set_mediabox([0,0,100,100])
+    
+    # Set the cropbox
+    page.set_cropbox(bbox)
+    # Set other boxes to match cropbox
+    # page.set_trimbox(bbox)
+    # page.set_bleedbox(bbox)
+    # page.set_artbox(bbox)
 
     # Save the cropped PDF
-    doc.save(output_path, clean=True, deflate=True)
-    doc.close()
+    # doc.save(output_path, clean=True, deflate=True)
+    # doc.close()
+    return (bbox, page)
 
-def step1(input_path):
-    doc = pymupdf.open(input_path)
-    page = doc[0]
-    pix = page.get_pixmap(matrix=pymupdf.Matrix(300 / 72, 300 / 72))  # 300 DPI
-    img = pix.pil_image()
-    print(img.getbbox())
-    # img_gray = np.array(img.convert("L"))
-    # img.save("img.png")
-
-    # pix = page.get_pixmap() # default 72 DPI
-    # img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+boxes = []
 
 def main():
-    input_path = "pens.pdf"
-    output_path = "out2.pdf"
-    
-    auto_crop_pdf(input_path, output_path)
-    # step1(input_path)
+    files = ["pens.pdf", "pens.pdf", "pens.pdf", "pens.pdf"]
+    for file in files:
+        boxes.append(auto_crop_pdf(file))
+
+    # input_path = "pens.pdf"
+    # output_path = "out2.pdf"
+    # auto_crop_pdf(input_path, output_path)
 
 
 if __name__ == "__main__":

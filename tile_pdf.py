@@ -16,7 +16,11 @@ def main():
     # Copy source page to destination page, several times
     for x in range(4):
         for y in range(4):
-            destpage.merge_translated_page(sourcepage, x * sourcepage.mediabox.width, LETTER_HEIGHT - y * sourcepage.mediabox.height) 
+            destpage.merge_translated_page(
+                sourcepage,
+                x * sourcepage.mediabox.width,
+                LETTER_HEIGHT - y * sourcepage.mediabox.height,
+            )
 
     # Write file
     with open("nup-dest2.pdf", "wb") as fp:
