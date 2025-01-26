@@ -108,14 +108,15 @@ def insert(node, box:Box):
         x0,y0,x1,y1 = box.bbox
         new_bbox = pymupdf.Rect(x0,y0,y1,x1)
         node.rotate = 90
-
         node.box = Box(new_bbox, box.page)
+        width = y1-x0
+        height = x1-y0
     else:
         return False
     
     # create new regions
-    nextWidth = node.width - box.bbox.width
-    nextHeight = node.height - box.bbox.height
+    nextWidth = node.width - width
+    nextHeight = node.height - height 
     if nextWidth > 0:
         node.right = TreeNode(node.x + box.bbox.width, node.y, nextWidth, box.bbox.height)
     if nextHeight > 0:
