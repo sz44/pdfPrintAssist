@@ -81,6 +81,7 @@ class TreeNode:
         self.width = width
         self.height = height
         self.box = None
+        self.rotate = 0
         self.left = None
         self.right = None
 
@@ -106,6 +107,7 @@ def insert(node, box:Box):
         # rotate
         x0,y0,x1,y1 = box.bbox
         new_bbox = pymupdf.Rect(x0,y0,y1,x1)
+        node.rotate = 90
 
         node.box = Box(new_bbox, box.page)
     else:
@@ -126,7 +128,7 @@ def drawToNewPage(page, root):
         if not node or not node.box:
             return
         pos = pymupdf.Rect(node.x, node.y, node.x + node.box.bbox.width, node.y + node.box.bbox.height)
-        page.show_pdf_page(pos, node.box.page.parent, 0)
+        page.show_pdf_page(pos, node.box.page.parent, 0, rotate=node.rotate)
         dfs(node.right)
         dfs(node.left)
 
