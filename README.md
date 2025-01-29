@@ -1,4 +1,4 @@
-## pdf packing tool
+## PDF packing tool
 
 Takes as input pdf files and merges them into a single page for convinent printing and saving paper.
 
